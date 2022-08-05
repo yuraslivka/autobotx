@@ -24,7 +24,7 @@ def telegram_bot(token):
 
         url = ("https://www.olx.pl/d/motoryzacja/samochody/ford/piotrkow-trybunalski/?search%5Border%5D=created_at:desc")
         
-        year_min = 2007
+        year_min = 2009
         price_min = 10000
         price_max = 25000
 
