@@ -22,7 +22,8 @@ def telegram_bot(token):
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         btn1 = types.KeyboardButton("FORD")
         btn2 = types.KeyboardButton("ALL")
-        markup.add(btn1, btn2)
+        btn3 = types.KeyboardButton("TEST")
+        markup.add(btn1, btn2, btn3)
         bot.send_message(message.chat.id, text="Привет, {0.first_name}!".format(message.from_user), reply_markup=markup)
     @bot.message_handler(content_types=['text'])
     def func(message):
@@ -79,15 +80,9 @@ def telegram_bot(token):
 
                                 bot.send_message(message.chat.id, item_href)
                                 print("push to telegram")
-        elif(message.text == "ALL"):
-            markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-            btn1 = types.KeyboardButton("ALL CARS")
-            btn2 = types.KeyboardButton("Test func")
-            back = types.KeyboardButton("Вернуться в главное меню")
-            markup.add(btn1, btn2, back)
-            bot.send_message(message.chat.id, text="Задай мне вопрос", reply_markup=markup)
         
-        elif(message.text == "ALL CARS"):
+        
+        elif(message.text == "ALL"):
             now = datetime.datetime.now()
             dnow = now.strftime("%d_%m_%Y")
             bot.send_message(message.chat.id, dnow)
@@ -111,7 +106,8 @@ def telegram_bot(token):
             
             for item in all_auto:
                 item_href = item.get("href")
-                auto_name = ["ford", "laguna", "megane"]
+                auto_name = ["ford", "bmw", "audi"]
+               
                 for item_a in auto_name:
                     if item_a in item_href:
                         print(item_a)
@@ -140,20 +136,29 @@ def telegram_bot(token):
 
                                 bot.send_message(message.chat.id, item_href)
                                 print("push to telegram")
+
+        elif(message.text == "TEST"):
+            print("t")
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+            btnn1 = types.KeyboardButton("CARS")
+            btnn2 = types.KeyboardButton("func")
+            back = types.KeyboardButton("BACK")
+            markup.add(btnn1, btnn2, back)
+            #bot.send_message(message.chat.id, text="Задай мне вопрос", reply_markup=markup)
         
-        elif message.text == "Test func":
+        elif message.text == "func":
             bot.send_message(message.chat.id, "test")
-            
-            
-            
-            
+
+        elif message.text == "CARS":
+            bot.send_message(message.chat.id, "test 96")
             
         
-        elif (message.text == "Вернуться в главное меню"):
+        elif (message.text == "BACK"):
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
             button1 = types.KeyboardButton("FORD")
             button2 = types.KeyboardButton("ALL")
-            markup.add(button1, button2)
+            button3 = types.KeyboardButton("TEST")
+            markup.add(button1, button2, button3)
             bot.send_message(message.chat.id, text="Вы вернулись в главное меню", reply_markup=markup)
         else:
             bot.send_message(message.chat.id, text="На такую комманду я не запрограммировал..")
