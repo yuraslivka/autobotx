@@ -37,6 +37,7 @@ def telegram_bot(token):
             year_min = 2007
             price_min = 5000
             price_max = 25000
+            
 
             headers = {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -144,13 +145,14 @@ def telegram_bot(token):
             btn2 = types.KeyboardButton("func")
             back = types.KeyboardButton("BACK")
             markup.add(btn1, btn2, back)
-            #bot.send_message(message.chat.id, text="Задай мне вопрос", reply_markup=markup)
+            bot.send_message(message.chat.id, text="TEST MENU", reply_markup=markup)
         
         elif message.text == "func":
             bot.send_message(message.chat.id, "test")
 
         elif message.text == "CARS":
-            bot.send_message(message.chat.id, "test 96")
+            msg = '\U0001F916\n'
+            bot.send_message(message.chat.id, msg)
             
         
         elif (message.text == "BACK"):
@@ -159,7 +161,7 @@ def telegram_bot(token):
             button2 = types.KeyboardButton("ALL")
             button3 = types.KeyboardButton("TEST")
             markup.add(button1, button2, button3)
-            bot.send_message(message.chat.id, text="Вы вернулись в главное меню", reply_markup=markup)
+            bot.send_message(message.chat.id, text="MAIN MENU", reply_markup=markup)
         else:
             bot.send_message(message.chat.id, text="На такую комманду я не запрограммировал..")
 
