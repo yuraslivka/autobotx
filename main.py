@@ -138,12 +138,12 @@ def telegram_bot(token):
                                 print("push to telegram")
 
         elif(message.text == "TEST"):
-            print("t")
+            print("-> menu test")
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-            btnn1 = types.KeyboardButton("CARS")
-            btnn2 = types.KeyboardButton("func")
+            btn1 = types.KeyboardButton("CARS")
+            btn2 = types.KeyboardButton("func")
             back = types.KeyboardButton("BACK")
-            markup.add(btnn1, btnn2, back)
+            markup.add(btn1, btn2, back)
             #bot.send_message(message.chat.id, text="Задай мне вопрос", reply_markup=markup)
         
         elif message.text == "func":
