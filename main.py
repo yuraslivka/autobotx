@@ -107,7 +107,7 @@ def telegram_bot(token):
             
             for item in all_auto:
                 item_href = item.get("href")
-                auto_name = ["ford", "bmw", "audi"]
+                auto_name = ["ford", "megane"]
                
                 for item_a in auto_name:
                     if item_a in item_href:
