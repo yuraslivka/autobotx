@@ -1,0 +1,12 @@
+{
+    "https://www.olx.pl/d/oferta/skoda-octavia-2007-1-6-mpi-gaz-hak-CID5-IDQ1uGz.html": {
+        "year": "2007",
+        "mileage": "309000",
+        "price": 15700
+    },
+    "https://www.olx.pl/d/oferta/sprzedam-ford-mondeo-ghia-mk3-z-lpg-CID5-IDQrhbm.html": {
+        "year": "2006",
+        "mileage": "288km",
+        "price": 8800
+    }
+}

@@ -1,5 +1,6 @@
 import requests
 import telebot
+import json
 import os
 import datetime
 from telebot import types
@@ -28,6 +29,7 @@ def telegram_bot(token):
     @bot.message_handler(content_types=['text'])
     def func(message):
         if(message.text == "FORD"):
+            auto_list = {}
             now = datetime.datetime.now()
             dnow = now.strftime("%d_%m_%Y")
             bot.send_message(message.chat.id, dnow)
@@ -62,6 +64,7 @@ def telegram_bot(token):
                         #------------------------рік та пробіг
                         item_ym = item.find(class_="css-niqab2")
                         item_year = item_ym.text.split(" ")[0]
+                        item_mileage = item_ym.text.split(" ")[3]+item_ym.text.split(" ")[4]
                         #bot.send_message(message.chat.id, item_year)
                         #-----знаходимо ціну
 
@@ -79,11 +82,21 @@ def telegram_bot(token):
                         if price<=price_max and price>=price_min:
                             if int(item_year)>=year_min: 
 
+                                auto_list[item_href] = {
+                                    "year" : item_year,
+                                    "mileage" : item_mileage,
+                                    "price" : price
+                                }
+
                                 bot.send_message(message.chat.id, item_href)
                                 print("push to telegram")
+            
+            with open("auto_list.json", "w") as file:
+                json.dump(auto_list, file, indent=4, ensure_ascii=False)
         
         
         elif(message.text == "ALL"):
+            auto_list_all = {}
             now = datetime.datetime.now()
             dnow = now.strftime("%d_%m_%Y")
             bot.send_message(message.chat.id, dnow)
@@ -107,7 +120,7 @@ def telegram_bot(token):
             
             for item in all_auto:
                 item_href = item.get("href")
-                auto_name = ["ford", "megane"]
+                auto_name = ["ford", "megane", "skoda"]
                
                 for item_a in auto_name:
                     if item_a in item_href:
@@ -118,6 +131,7 @@ def telegram_bot(token):
                         #------------------------рік та пробіг
                         item_ym = item.find(class_="css-niqab2")
                         item_year = item_ym.text.split(" ")[0]
+                        item_mileage = item_ym.text.split(" ")[3]+item_ym.text.split(" ")[4]
                         #bot.send_message(message.chat.id, item_year)
                         #-----знаходимо ціну
 
@@ -135,8 +149,17 @@ def telegram_bot(token):
                         if price<=price_max and price>=price_min:
                             if int(item_year)>=year_min: 
 
+                                auto_list_all[item_href] = {
+                                    "year" : item_year,
+                                    "mileage" : item_mileage,
+                                    "price" : price
+                                }
+
                                 bot.send_message(message.chat.id, item_href)
                                 print("push to telegram")
+
+            with open("auto_list_all.json", "w") as file:
+                json.dump(auto_list_all, file, indent=4, ensure_ascii=False)
 
         elif(message.text == "TEST"):
             print("-> menu test")
@@ -156,6 +179,7 @@ def telegram_bot(token):
             
         
         elif (message.text == "BACK"):
+            print("-> main menu")
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
             button1 = types.KeyboardButton("FORD")
             button2 = types.KeyboardButton("ALL")
