@@ -120,7 +120,7 @@ def telegram_bot(token):
             
             for item in all_auto:
                 item_href = item.get("href")
-                auto_name = ["ford", "megane", "skoda"]
+                auto_name = ["ford", "megane", "mx-5", "mx 5"]
                
                 for item_a in auto_name:
                     if item_a in item_href:
@@ -172,6 +172,9 @@ def telegram_bot(token):
         
         elif message.text == "func":
             bot.send_message(message.chat.id, "test")
+
+            now = datetime.datetime.now()
+            bot.send_message(message.chat.id, now)
 
         elif message.text == "CARS":
             msg = '\U0001F916\n'
