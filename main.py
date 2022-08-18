@@ -34,10 +34,11 @@ def telegram_bot(token):
             dnow = now.strftime("%d_%m_%Y")
             bot.send_message(message.chat.id, dnow)
 
-            url = ("https://www.olx.pl/d/motoryzacja/samochody/piotrkow-trybunalski/?search%5Border%5D=created_at:desc")
+            #url = ("https://www.olx.pl/d/motoryzacja/samochody/piotrkow-trybunalski/?search%5Border%5D=created_at:desc")
+            url = ("https://www.olx.pl/d/motoryzacja/samochody/ford/piotrkow-trybunalski/?search%5Bdist%5D=100&search%5Border%5D=created_at:desc&search%5Bfilter_enum_model%5D%5B0%5D=focus&search%5Bfilter_enum_condition%5D%5B0%5D=notdamaged")
             
-            year_min = 2007
-            price_min = 5000
+            year_min = 2008
+            price_min = 10000
             price_max = 25000
             
 
@@ -104,8 +105,8 @@ def telegram_bot(token):
             url = ("https://www.olx.pl/d/motoryzacja/samochody/piotrkow-trybunalski/?search%5Border%5D=created_at:desc")
             
             year_min = 2000
-            price_min = 5000
-            price_max = 35000
+            price_min = 10000
+            price_max = 30000
 
             headers = {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -120,7 +121,7 @@ def telegram_bot(token):
             
             for item in all_auto:
                 item_href = item.get("href")
-                auto_name = ["ford", "megane", "mx-5", "mx 5"]
+                auto_name = ["megane", "mx-5", "mx 5", "bmw", "a3", "toyota"]
                
                 for item_a in auto_name:
                     if item_a in item_href:
@@ -177,7 +178,7 @@ def telegram_bot(token):
             bot.send_message(message.chat.id, now)
 
         elif message.text == "CARS":
-            msg = '\U0001F916\n'
+            msg = '\U0001F697\n'
             bot.send_message(message.chat.id, msg)
             
         

@@ -1,12 +1,17 @@
 {
-    "https://www.olx.pl/d/oferta/skoda-octavia-2007-1-6-mpi-gaz-hak-CID5-IDQ1uGz.html": {
-        "year": "2007",
-        "mileage": "309000",
-        "price": 15700
+    "https://www.otomoto.pl/oferta/audi-a3-audi-a3-sportback-2-0-tdi-ID6EG9uW.html": {
+        "year": "2009",
+        "mileage": "205000",
+        "price": 30900
     },
-    "https://www.olx.pl/d/oferta/sprzedam-ford-mondeo-ghia-mk3-z-lpg-CID5-IDQrhbm.html": {
+    "https://www.olx.pl/d/oferta/bmw-seria-5-e61-520d-lift-CID5-IDQiwps.html": {
+        "year": "2007",
+        "mileage": "271000",
+        "price": 26600
+    },
+    "https://www.olx.pl/d/oferta/bmw-e87-seria-1-2006-r-CID5-IDQuqm5.html": {
         "year": "2006",
-        "mileage": "288km",
-        "price": 8800
+        "mileage": "172000",
+        "price": 19999
     }
 }

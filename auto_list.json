@@ -1,1 +1,52 @@
-{}
+{
+    "https://www.olx.pl/d/oferta/witam-sprzedam-forda-focusa-mk2-2010r-CID5-IDQqV6A.html": {
+        "year": "2010",
+        "mileage": "200000",
+        "price": 16200
+    },
+    "https://www.otomoto.pl/oferta/ford-focus-ID6EQ2dL.html": {
+        "year": "2008",
+        "mileage": "239000",
+        "price": 12600
+    },
+    "https://www.otomoto.pl/oferta/ford-focus-1-6-diesel-1-wlasciciel-navi-oplacony-ID6EqLsi.html": {
+        "year": "2011",
+        "mileage": "222000",
+        "price": 23500
+    },
+    "https://www.otomoto.pl/oferta/ford-focus-1-6-benzynaiklimatyzacjaalu4xel-szybyel-lusterkazadbany-z-niemiec-ID6ERfix.html": {
+        "year": "2008",
+        "mileage": "183000",
+        "price": 17500
+    },
+    "https://www.otomoto.pl/oferta/ford-focus-benzyna-niski-przebieg-ID6EOt8p.html": {
+        "year": "2012",
+        "mileage": "100000",
+        "price": 22999
+    },
+    "https://www.otomoto.pl/oferta/ford-focus-2011-r-1-6-tdci-klima-kombi-niemcy-super-stan-zamiana-raty-ID6EAz0X.html": {
+        "year": "2011",
+        "mileage": "225003",
+        "price": 24500
+    },
+    "https://www.otomoto.pl/oferta/ford-focus-lift-1-6-tdci-109-km-klima-alu-serwis-z-niemiec-ID6EPV0A.html": {
+        "year": "2011",
+        "mileage": "200000",
+        "price": 17900
+    },
+    "https://www.otomoto.pl/oferta/ford-focus-1-6i-115km-klima-sensory-swiezy-import-mega-stan-gwarancja-serwis-ID6EPWib.html": {
+        "year": "2009",
+        "mileage": "230006",
+        "price": 16900
+    },
+    "https://www.otomoto.pl/oferta/ford-focus-cabriolet-super-stan-bezwypadkowy-ID6EP0re.html": {
+        "year": "2008",
+        "mileage": "216000",
+        "price": 19900
+    },
+    "https://www.olx.pl/d/oferta/ford-focus-mk2-lift-1-6-102-km-sliczny-tempomat-CID5-IDOF1KZ.html": {
+        "year": "2008",
+        "mileage": "190000",
+        "price": 13900
+    }
+}
