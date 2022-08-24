@@ -3,201 +3,177 @@ import telebot
 import json
 import os
 import datetime
+import asyncio
 from telebot import types
 import time, random
 from bs4 import BeautifulSoup
-from auth_data import token
+import auth_data
+import aiogram.utils.markdown as md
+from aiogram import Bot, Dispatcher, executor, types
+from aiogram.dispatcher.filters import Text
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram.dispatcher import filters, FSMContext
+from aiogram.dispatcher.filters import Text
+from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram.types import ParseMode
+from aiogram.utils import executor
 
 
+bot = Bot(token=auth_data.TOKEN, parse_mode=types.ParseMode.HTML)
+dp = Dispatcher(bot, storage=MemoryStorage())
 
-def telegram_bot(token):
-    bot = telebot.TeleBot(token)
+class Form(StatesGroup):
+    name = State()
 
-    @bot.message_handler(commands=["st"])
-    def start_message(message):
-        bot.send_message(message.chat.id, "Autobot")
+f_date = open('text.txt', 'r')
+f = f_date.read()
+f_date.close()
+print(f)
 
-        
-    @bot.message_handler(commands=['start'])
-    def start(message):
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        btn1 = types.KeyboardButton("FORD")
-        btn2 = types.KeyboardButton("ALL")
-        btn3 = types.KeyboardButton("TEST")
-        markup.add(btn1, btn2, btn3)
-        bot.send_message(message.chat.id, text="Привет, {0.first_name}!".format(message.from_user), reply_markup=markup)
-    @bot.message_handler(content_types=['text'])
-    def func(message):
-        if(message.text == "FORD"):
-            auto_list = {}
-            now = datetime.datetime.now()
-            dnow = now.strftime("%d_%m_%Y")
-            bot.send_message(message.chat.id, dnow)
+@dp.message_handler(commands='start')
+async def start(message: types.Message):
+    print(f, " *")
 
-            #url = ("https://www.olx.pl/d/motoryzacja/samochody/piotrkow-trybunalski/?search%5Border%5D=created_at:desc")
-            url = ("https://www.olx.pl/d/motoryzacja/samochody/ford/piotrkow-trybunalski/?search%5Bdist%5D=100&search%5Border%5D=created_at:desc&search%5Bfilter_enum_model%5D%5B0%5D=focus&search%5Bfilter_enum_condition%5D%5B0%5D=notdamaged")
-            
-            year_min = 2008
-            price_min = 10000
-            price_max = 25000
-            
+    start_buttons = ['/start', f, 'OTHER','MENU']
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    keyboard.add(*start_buttons)
 
-            headers = {
+    await message.answer('Begin search', reply_markup=keyboard)
+
+
+@dp.message_handler(Text(contains = f))
+async def start(message: types.Message):
+    print(f, " **")
+    
+    auto_list = {}
+    now = datetime.datetime.now()
+    dnow = now.strftime("%d_%m_%Y")
+    await message.answer(dnow)
+    await message.answer('\U0001F697\n')
+
+    url = ("https://www.olx.pl/d/motoryzacja/samochody/"+f.lower()+"/piotrkow-trybunalski/?search%5Border%5D=created_at:desc")
+    
+    #url = ("https://www.olx.pl/d/motoryzacja/samochody/"+f.lower()+"/piotrkow-trybunalski/?search%5Bdist%5D=100&search%5Border%5D=created_at:desc&search%5Bfilter_enum_model%5D%5B0%5D=focus&search%5Bfilter_enum_condition%5D%5B0%5D=notdamaged")
+    print(url) 
+
+
+    year_min = 2008
+    price_min = 10000
+    price_max = 25000
+
+    headers = {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
             "UserAgent" : "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Mobile Safari/537.36"
             }
 
-            reg = requests.get(url, headers=headers)
-            src=reg.text
+    reg = requests.get(url, headers=headers)
+    src=reg.text
 
-            soup = BeautifulSoup(src, "lxml")
-            all_auto = soup.find_all(class_="css-1bbgabe")
-
-            for item in all_auto:
-                item_href = item.get("href")
-                auto_name = ["ford"]
-                for item_a in auto_name:
-                    if item_a in item_href:
-                        print(item_a)
-                        if "/d" in item_href:
-                            item_href = item_href.replace("/d", "https://www.olx.pl/d")
-
-                        #------------------------рік та пробіг
-                        item_ym = item.find(class_="css-niqab2")
-                        item_year = item_ym.text.split(" ")[0]
-                        item_mileage = item_ym.text.split(" ")[3]+item_ym.text.split(" ")[4]
-                        #bot.send_message(message.chat.id, item_year)
-                        #-----знаходимо ціну
-
-                        item_price = item.find(class_="css-wpfvmn-Text eu5v0x0")
-                        word_list = item_price.text
-                        num_list =[]
-                        for word in word_list:
-                            if word.isnumeric():
-                                num_list.append(int(word))
-                            
-                        s = [str(integer) for integer in num_list]
-                        a_string = "".join(s)
-                        price = int(a_string)
-
-                        if price<=price_max and price>=price_min:
-                            if int(item_year)>=year_min: 
-
-                                auto_list[item_href] = {
-                                    "year" : item_year,
-                                    "mileage" : item_mileage,
-                                    "price" : price
-                                }
-
-                                bot.send_message(message.chat.id, item_href)
-                                print("push to telegram")
+    soup = BeautifulSoup(src, "lxml")
+    all_auto = soup.find_all(class_="css-1bbgabe")
+    
+    
+    for item in all_auto:
+        item_href = item.get("href")
+        f2 = list(f.lower().split(" "))
+        auto_name = f2
+        print(auto_name)
+        
+        #print(f2)
+        #print(item_href)
+        for item_a in auto_name:
             
-            with open("auto_list.json", "w") as file:
-                json.dump(auto_list, file, indent=4, ensure_ascii=False)
-        
-        
-        elif(message.text == "ALL"):
-            auto_list_all = {}
-            now = datetime.datetime.now()
-            dnow = now.strftime("%d_%m_%Y")
-            bot.send_message(message.chat.id, dnow)
+            if item_a in item_href:
+                #print(item_a)
+                if "/d" in item_href:
+                    item_href = item_href.replace("/d", "https://www.olx.pl/d")
+                    print(item_href)
+                #------------------------рік та пробіг
+                item_ym = item.find(class_="css-85i438")
+                item_year = item_ym.text.split(" ")[0]
+                item_mileage = item_ym.text.split(" ")[3]+item_ym.text.split(" ")[4]
+                #bot.send_message(message.chat.id, item_year)
+                #-----знаходимо ціну
+                item_price = item.find(class_="css-wpfvmn-Text eu5v0x0")
+                word_list = item_price.text
+                num_list =[]
+                for word in word_list:
+                    if word.isnumeric():
+                        num_list.append(int(word))
+                s = [str(integer) for integer in num_list]
+                a_string = "".join(s)
+                price = int(a_string)
+                if price<=price_max and price>=price_min:
+                    if int(item_year)>=year_min:
+                        auto_list[item_href] = {
+                                "year" : item_year,
+                                "mileage" : item_mileage,
+                                "price" : price
+                            }
 
-            url = ("https://www.olx.pl/d/motoryzacja/samochody/piotrkow-trybunalski/?search%5Border%5D=created_at:desc")
-            
-            year_min = 2000
-            price_min = 10000
-            price_max = 30000
+                        await message.answer(item_href)                            
+                        print("push to telegram")
 
-            headers = {
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-            "UserAgent" : "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Mobile Safari/537.36"
-            }
+@dp.message_handler(Text(equals='MENU'))
+async def start(message: types.Message):
+    menu_buttons = ['/CHANGE','BACK']
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    keyboard.add(*menu_buttons)
+    await message.answer('MENU', reply_markup=keyboard)
 
-            reg = requests.get(url, headers=headers)
-            src=reg.text
+@dp.message_handler(Text(equals='OTHER'))
+async def oth_btn(message: types.Message):
+    await message.answer(f)
 
-            soup = BeautifulSoup(src, "lxml")
-            all_auto = soup.find_all(class_="css-1bbgabe")
-            
-            for item in all_auto:
-                item_href = item.get("href")
-                auto_name = ["megane", "mx-5", "mx 5", "bmw", "a3", "toyota"]
-               
-                for item_a in auto_name:
-                    if item_a in item_href:
-                        print(item_a)
-                        if "/d" in item_href:
-                            item_href = item_href.replace("/d", "https://www.olx.pl/d")
+@dp.message_handler(commands=['CHANGE'])
+async def cmd_start(message: types.Message):
+    await Form.name.set()
+    await message.reply("Enter car name:")
 
-                        #------------------------рік та пробіг
-                        item_ym = item.find(class_="css-niqab2")
-                        item_year = item_ym.text.split(" ")[0]
-                        item_mileage = item_ym.text.split(" ")[3]+item_ym.text.split(" ")[4]
-                        #bot.send_message(message.chat.id, item_year)
-                        #-----знаходимо ціну
+# Сюда приходит ответ с именем
+@dp.message_handler(state=Form.name)
+async def process_name(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['name'] = message.text
+        date_to_w = data['name']
+        f2 = date_to_w.upper()
+        global f
+        f = date_to_w.upper()
+        print(f)
+        print(f2)
 
-                        item_price = item.find(class_="css-wpfvmn-Text eu5v0x0")
-                        word_list = item_price.text
-                        num_list =[]
-                        for word in word_list:
-                            if word.isnumeric():
-                                num_list.append(int(word))
-                            
-                        s = [str(integer) for integer in num_list]
-                        a_string = "".join(s)
-                        price = int(a_string)
+        start_buttons = ['/start', f2,'OTHER','MENU']
+        keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        keyboard.add(*start_buttons)
 
-                        if price<=price_max and price>=price_min:
-                            if int(item_year)>=year_min: 
 
-                                auto_list_all[item_href] = {
-                                    "year" : item_year,
-                                    "mileage" : item_mileage,
-                                    "price" : price
-                                }
+        ch = open('text.txt', 'w')
+        ch.write(date_to_w.upper())
+        ch.close()
+        await bot.send_message(
+            message.chat.id,
+            md.text(
+                md.text('Car name for search: ', data['name']),
+                
+                sep='\n',
+            ), 
+            reply_markup=keyboard
+        )
 
-                                bot.send_message(message.chat.id, item_href)
-                                print("push to telegram")
+    await state.finish()
 
-            with open("auto_list_all.json", "w") as file:
-                json.dump(auto_list_all, file, indent=4, ensure_ascii=False)
 
-        elif(message.text == "TEST"):
-            print("-> menu test")
-            markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-            btn1 = types.KeyboardButton("CARS")
-            btn2 = types.KeyboardButton("func")
-            back = types.KeyboardButton("BACK")
-            markup.add(btn1, btn2, back)
-            bot.send_message(message.chat.id, text="TEST MENU", reply_markup=markup)
-        
-        elif message.text == "func":
-            bot.send_message(message.chat.id, "test")
+@dp.message_handler(Text(equals='BACK'))
+async def start(message: types.Message):
+    
+    start_buttons = ['/start',f,'OTHER','MENU']
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    keyboard.add(*start_buttons)
 
-            now = datetime.datetime.now()
-            bot.send_message(message.chat.id, now)
+    await message.answer('Begin search', reply_markup=keyboard)
 
-        elif message.text == "CARS":
-            msg = '\U0001F697\n'
-            bot.send_message(message.chat.id, msg)
-            
-        
-        elif (message.text == "BACK"):
-            print("-> main menu")
-            markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-            button1 = types.KeyboardButton("FORD")
-            button2 = types.KeyboardButton("ALL")
-            button3 = types.KeyboardButton("TEST")
-            markup.add(button1, button2, button3)
-            bot.send_message(message.chat.id, text="MAIN MENU", reply_markup=markup)
-        else:
-            bot.send_message(message.chat.id, text="На такую комманду я не запрограммировал..")
-
-               
-        
-        
-
-    bot.polling()
+def main():
+    executor.start_polling(dp, skip_updates=True)
 
 if __name__ == '__main__':
-    telegram_bot(token)
+    main()
