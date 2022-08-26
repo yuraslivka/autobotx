@@ -89,7 +89,7 @@ async def start(message: types.Message):
                     item_href = item_href.replace("/d", "https://www.olx.pl/d")
                     print(item_href)
                 #------------------------рік та пробіг
-                item_ym = item.find(class_="css-85i438")
+                item_ym = item.find(class_="css-efx9z5")
                 item_year = item_ym.text.split(" ")[0]
                 item_mileage = item_ym.text.split(" ")[3]+item_ym.text.split(" ")[4]
                 #bot.send_message(message.chat.id, item_year)
