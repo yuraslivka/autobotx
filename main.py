@@ -129,6 +129,9 @@ async def start(message: types.Message):
 
 @dp.message_handler(Text(equals='OTHER'))
 async def oth_btn(message: types.Message):
+    f_date = open('text.txt', 'r', encoding='utf8')
+    f = f_date.read()
+    f_date.close()
     await message.answer(f)
 
 @dp.message_handler(commands=['CHANGE'])
