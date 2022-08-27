@@ -32,6 +32,9 @@ print(f)
 
 @dp.message_handler(commands='start')
 async def start(message: types.Message):
+    f_date = open('text.txt', 'r', encoding='utf8')
+    f = f_date.read()
+    f_date.close()
     print(f, " *")
 
     start_buttons = ['/start', 'SEARCH', 'OTHER','MENU']
