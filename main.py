@@ -25,7 +25,7 @@ dp = Dispatcher(bot, storage=MemoryStorage())
 class Form(StatesGroup):
     name = State()
 
-f_date = open('text.txt', 'r')
+f_date = open('text.txt', 'r', encoding='utf8')
 f = f_date.read()
 f_date.close()
 print(f)
@@ -34,15 +34,18 @@ print(f)
 async def start(message: types.Message):
     print(f, " *")
 
-    start_buttons = ['/start', f, 'OTHER','MENU']
+    start_buttons = ['/start', 'SEARCH', 'OTHER','MENU']
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     keyboard.add(*start_buttons)
 
     await message.answer('Begin search', reply_markup=keyboard)
 
 
-@dp.message_handler(Text(contains = f))
+@dp.message_handler(Text(equals="SEARCH"))
 async def start(message: types.Message):
+    f_date = open('text.txt', 'r', encoding='utf8')
+    f = f_date.read()
+    f_date.close()
     print(f, " **")
     
     auto_list = {}
@@ -136,18 +139,15 @@ async def process_name(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['name'] = message.text
         date_to_w = data['name']
-        f2 = date_to_w.upper()
-        global f
-        f = date_to_w.upper()
-        print(f)
-        print(f2)
+        
+        
 
-        start_buttons = ['/start', f2,'OTHER','MENU']
+        start_buttons = ['/start', 'SEARCH', 'OTHER', 'MENU']
         keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
         keyboard.add(*start_buttons)
 
 
-        ch = open('text.txt', 'w')
+        ch = open('text.txt', 'w', encoding="utf8")
         ch.write(date_to_w.upper())
         ch.close()
         await bot.send_message(
@@ -166,7 +166,7 @@ async def process_name(message: types.Message, state: FSMContext):
 @dp.message_handler(Text(equals='BACK'))
 async def start(message: types.Message):
     
-    start_buttons = ['/start',f,'OTHER','MENU']
+    start_buttons = ['/start', 'SEARCH','OTHER','MENU']
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
     keyboard.add(*start_buttons)
 
