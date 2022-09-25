@@ -129,10 +129,74 @@ async def start(message: types.Message):
 
 @dp.message_handler(Text(equals='OTHER'))
 async def oth_btn(message: types.Message):
-    f_date = open('text.txt', 'r', encoding='utf8')
-    f = f_date.read()
-    f_date.close()
-    await message.answer(f)
+    
+    auto_list = {}
+    now = datetime.datetime.now()
+    dnow = now.strftime("%d_%m_%Y")
+    await message.answer(dnow)
+    await message.answer('\U0001F697\n')
+
+    url = ("https://www.olx.pl/d/motoryzacja/samochody/ford/piotrkow-trybunalski/?search%5Border%5D=created_at:desc&search%5Bfilter_enum_model%5D%5B0%5D=focus")
+    
+    print(url) 
+
+
+    year_min = 2008
+    price_min = 10000
+    price_max = 25000
+
+    headers = {
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+            "UserAgent" : "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Mobile Safari/537.36"
+            }
+
+    reg = requests.get(url, headers=headers)
+    src=reg.text
+
+    soup = BeautifulSoup(src, "lxml")
+    all_auto = soup.find_all(class_="css-1bbgabe")
+    
+    
+    for item in all_auto:
+        item_href = item.get("href")
+        f2 = list(f.lower().split(" "))
+        auto_name = f2
+        print(auto_name)
+        
+        #print(f2)
+        #print(item_href)
+        for item_a in auto_name:
+            
+            if item_a in item_href:
+                #print(item_a)
+                if "/d" in item_href:
+                    item_href = item_href.replace("/d", "https://www.olx.pl/d")
+                    print(item_href)
+                #------------------------рік та пробіг
+                item_ym = item.find(class_="css-efx9z5")
+                item_year = item_ym.text.split(" ")[0]
+                item_mileage = item_ym.text.split(" ")[3]+item_ym.text.split(" ")[4]
+                #bot.send_message(message.chat.id, item_year)
+                #-----знаходимо ціну
+                item_price = item.find(class_="css-wpfvmn-Text eu5v0x0")
+                word_list = item_price.text
+                num_list =[]
+                for word in word_list:
+                    if word.isnumeric():
+                        num_list.append(int(word))
+                s = [str(integer) for integer in num_list]
+                a_string = "".join(s)
+                price = int(a_string)
+                if price<=price_max and price>=price_min:
+                    if int(item_year)>=year_min:
+                        auto_list[item_href] = {
+                                "year" : item_year,
+                                "mileage" : item_mileage,
+                                "price" : price
+                            }
+
+                        await message.answer(item_href)                            
+                        print("push to telegram")
 
 @dp.message_handler(commands=['CHANGE'])
 async def cmd_start(message: types.Message):
